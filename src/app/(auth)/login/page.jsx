@@ -16,6 +16,7 @@ import {
 } from "react-icons/fi";
 import AuthShell from "@/components/auth/Authshell";
 import { Field, inputCls } from "@/components/auth/Field";
+import { authClient } from "@/lib/auth-client";
 
 
 const dashboardLinks = {
@@ -52,7 +53,7 @@ const LoginPage = () => {
 
     toast.success("Login successful");
     // role onujayi nijer dashboard e pathai
-    router.push(dashboardLinks[res?.user?.role] || "/");
+    router.push("/");
     router.refresh();
   };
 

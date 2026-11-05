@@ -4,6 +4,7 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/nav/Navbar";
+import { Toaster } from "sonner";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -32,7 +33,7 @@ export default function RootLayout({ children }) {
         <Navbar></Navbar>
         <main>
           {children}
-          
+          <Toaster position="top-right" richColors expand={false} />
         </main>
       </body>
     </html>

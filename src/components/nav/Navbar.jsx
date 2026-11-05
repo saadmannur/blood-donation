@@ -1,6 +1,7 @@
 import Link from "next/link";
 import NavLinks from "./NavLinks";
 import NavColor from "./NavColor";
+import NavSession from "./NavSession";
 
 const links = [
   { href: "/", label: "Home" },
@@ -40,7 +41,7 @@ const Navbar = () => {
 
         {/* Right side, desktop */}
         <div className="hidden lg:block">
-          {/* <NavSession /> */}
+          <NavSession />
         </div>
 
         {/* Mobile menu (daisyUI dropdown, pure CSS) */}
@@ -76,7 +77,7 @@ const Navbar = () => {
               </li>
             ))}
             <li className="mt-2 border-t border-black/10 pt-3">
-              {/* <NavSession variant="mobile" /> */}
+              <NavSession variant="mobile" />
             </li>
           </ul>
         </div>

@@ -147,7 +147,7 @@ const Footer = () => {
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-5 text-sm text-gray-500 md:flex-row">
           <p>
-            © {new Date().getFullYear()}{" "}
+            © 
             <span className="font-semibold text-gray-300">BloodLink</span>. All
             rights reserved.
           </p>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Button } from "@heroui/react";
 import { toast } from "sonner";
@@ -22,6 +22,7 @@ import { FaDroplet } from "react-icons/fa6";
 
 import AuthShell from "@/components/auth/Authshell";
 import { Field, inputCls } from "@/components/auth/Field";
+import { authClient } from "@/lib/auth-client";
 
 
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -52,55 +53,71 @@ const RegisterPage = () => {
     setToday(new Date().toISOString().split("T")[0]);
   }, []);
 
-  const onSubmit = async (values) => {
-    setIsSubmitting(true);
-    console.log(values);
 
+const onSubmit = async (values) => {
+  setIsSubmitting(true);
+
+  try {
     const { name, email, phone, password, role } = values;
-    console.log(name, email, phone, password, role);
 
-    // role: UI te shudhu donor / patient. Admin kokhono UI theke hobe na.
-    // const { error } = await authClient.signUp.email({
-    //   name,
-    //   email,
-    //   password,
-    //   phone,
-    //   role,
-    // });
+    const { data: res, error } = await authClient.signUp.email({
+      name,
+      email,
+      password,
+      phone,
+      role,
+    });
 
-    // if (error) {
-    //   toast.error(error.message || "Registration failed");
-    //   setIsSubmitting(false);
-    //   return;
-    // }
+    if (error) {
+      toast.error(error.message || "Registration failed");
+      return;
+    }
 
-    // // Donor hole donor profile (pending verification) toiri korbo
-    // if (role === "donor") {
-    //   try {
-    //     const res = await fetch("/api/donors", {
-    //       method: "POST",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify({
-    //         bloodGroup: values.bloodGroup,
-    //         city: values.city,
-    //         area: values.area,
-    //         lastDonationDate: values.lastDonationDate || null,
-    //         availability: values.availability,
-    //       }),
-    //     });
-    //     if (!res.ok) throw new Error();
-    //   } catch {
-    //     toast.warning(
-    //       "Account created, but donor profile could not be saved. Complete it from your dashboard.",
-    //     );
-    //   }
-    // }
+    // Save donor profile
+    if (role === "donor") {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/donors`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: values.name,
+            email: values.email,
+            phone: values.phone,
+            bloodGroup: values.bloodGroup,
+            city: values.city,
+            area: values.area,
+            lastDonationDate: values.lastDonationDate || null,
+            availability: values.availability,
+          }),
+        },
+      );
+
+      const donorData = await response.json();
+
+      if (!response.ok) {
+        toast.warning("Account created, but donor profile could not be saved.");
+        return;
+      }
+
+      // console.log("Donor created:", donorData);
+    }
 
     toast.success("Account created successfully");
-    // router.push(dashboardLinks[role] || "/");
-    router.refresh();
+     if (res) {
+      router.push("/login");
+     }
+    
+  } catch (error) {
+    console.error(error);
+    toast.error("Something went wrong. Please try again.");
+  } finally {
     setIsSubmitting(false);
-  };
+  }
+};
+
 
   return (
     <AuthShell
