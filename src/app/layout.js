@@ -27,6 +27,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
+      data-theme="light"
       className={`${outfit.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col ">
