@@ -13,16 +13,38 @@ import PageHeader from "@/components/ui/PageHeader";
 import StatusBadge from "@/components/ui/StatusBadge";
 import RequestInfo from "@/components/requests/RequestInfo";
 import { btnDanger, btnOutline, btnSuccess, card } from "@/components/ui/styles";
+import { authClient } from "@/lib/auth-client";
 
 const DonorRequestDetailsPage = () => {
     const { id } = useParams();
-    const { data: r, loading, error, reload } = useApi(`/api/requests/${id}`);
+    // console.log(id);
+
+    const { data, isPending } = authClient.useSession();
+      const user = data?.user;
+      const donorEmail = user?.email;
+    
+      const profile = useApi(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/donors/email/${donorEmail}`,
+      );
+    //   console.log(profile);
+      const donorId = profile?.data?._id;
+
+    const {
+      data: r,
+      loading,
+      error,
+      reload,
+    } = useApi(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/requests/${id}`);
     const [busy, setBusy] = useState("");
 
     const respond = async (response) => {
+        console.log(response);
         setBusy(response);
         try {
-            await api("/api/responses", { method: "POST", body: { requestId: id, response } });
+            await api(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/responses`, {
+              method: "POST",
+              body: { donorId, requestId: id, response },
+            });
             toast.success(response === "interested" ? "Thank you! The requester can now contact you." : "Response saved");
             await reload();
         } catch (e) {

@@ -12,9 +12,22 @@ import PageHeader from "@/components/ui/PageHeader";
 import StatCard from "@/components/ui/StatCard";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { btnOutline, btnPrimary, card } from "@/components/ui/styles";
+import { authClient } from "@/lib/auth-client";
 
 const PatientOverviewPage = () => {
-    const { data, loading, error, reload } = useApi("/api/requests/my");
+    const { data: u, isPending } = authClient.useSession();
+      const user = u?.user;
+      const patientId = user?.id;
+    //   console.log(patientId);
+    
+    //   const profile = useApi(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/patient/email/${patientEmail}`);
+    //   console.log(profile);
+    //   const patientId = profile?.data?._id;
+
+
+    const { data, loading, error, reload } = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/requests/my?patientId=${patientId}`,
+    );
     const requests = asArray(data);
 
     const total = requests.length;

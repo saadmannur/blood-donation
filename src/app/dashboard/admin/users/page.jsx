@@ -15,7 +15,9 @@ import { btnDanger, btnOutline, inputCls, selectCls } from "@/components/ui/styl
 const ManageUsersPage = () => {
     const [search, setSearch] = useState("");
     const [role, setRole] = useState("");
-    const { data, loading, error, reload } = useApi("/api/admin/users");
+    const { data, loading, error, reload } = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users`,
+    );
 
     const q = search.trim().toLowerCase();
     const rows = asArray(data).filter(
@@ -25,10 +27,13 @@ const ManageUsersPage = () => {
     );
 
     const toggle = async (u) => {
-        const next = u.accountStatus === "suspended" ? "active" : "suspended";
+        const next = u.status === "active" ? "suspended" : "active";
         if (next === "suspended" && !window.confirm(`Suspend ${u.name}? They will not be able to use the platform.`)) return;
         try {
-            await api(`/api/admin/users/${u._id}`, { method: "PATCH", body: { accountStatus: next } });
+            await api(
+              `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users/${u._id}`,
+              { method: "PATCH", body: { status: next } },
+            );
             toast.success(next === "suspended" ? "Account suspended" : "Account reactivated");
             reload();
         } catch (e) {
@@ -42,9 +47,9 @@ const ManageUsersPage = () => {
         { key: "phone", header: "Phone" },
         { key: "role", header: "Role", render: (u) => <span className="capitalize">{u.role}</span> },
         {
-            key: "accountStatus",
+            key: "status",
             header: "Status",
-            render: (u) => <StatusBadge value={u.accountStatus || "active"} />,
+            render: (u) => <StatusBadge value={u.status || "active"} />,
         },
         { key: "createdAt", header: "Joined", render: (u) => formatDate(u.createdAt) },
         {
@@ -55,9 +60,9 @@ const ManageUsersPage = () => {
                     <button
                         type="button"
                         onClick={() => toggle(u)}
-                        className={u.accountStatus === "suspended" ? btnOutline : btnDanger}
+                        className={u.status === "active" ? btnOutline : btnDanger}
                     >
-                        {u.accountStatus === "suspended" ? "Reactivate" : "Suspend"}
+                        {u.status === "suspended" ? "Reactivate" : "Suspend"}
                     </button>
                 ),
         },

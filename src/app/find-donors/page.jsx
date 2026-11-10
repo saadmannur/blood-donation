@@ -19,7 +19,9 @@ const FindDonorsPage = () => {
     const [applied, setApplied] = useState(empty);
 
     const qs = new URLSearchParams(Object.entries(applied).filter(([, v]) => v.trim())).toString();
-    const { data, loading, error, reload } = useApi(`/api/donors${qs ? `?${qs}` : ""}`);
+    const { data, loading, error, reload } = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/donors${qs ? `?${qs}` : ""}`,
+    );
     const donors = asArray(data);
 
     const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));

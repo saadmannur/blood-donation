@@ -33,15 +33,22 @@ const donorColumns = [
 const AdminRequestDetailsPage = () => {
     const { id } = useParams();
     const router = useRouter();
-    const request = useApi(`/api/requests/${id}`);
-    const matching = useApi(`/api/matching/${id}`);
+    const request = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/requests/${id}`,
+    );
+    const matching = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/matching/${id}`,
+    );
 
     const r = request.data;
     const donors = asArray(matching.data);
 
     const changeStatus = async (next) => {
         try {
-            await api(`/api/admin/requests/${id}/status`, { method: "PATCH", body: { status: next } });
+            await api(
+              `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/requests/${id}/status`,
+              { method: "PATCH", body: { status: next } },
+            );
             toast.success("Status updated");
             request.reload();
         } catch (e) {
@@ -52,7 +59,10 @@ const AdminRequestDetailsPage = () => {
     const remove = async () => {
         if (!window.confirm("Remove this request? This cannot be undone.")) return;
         try {
-            await api(`/api/admin/requests/${id}`, { method: "DELETE" });
+            await api(
+              `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/requests/${id}`,
+              { method: "DELETE" },
+            );
             toast.success("Request removed");
             router.push("/dashboard/admin/requests");
             router.refresh();

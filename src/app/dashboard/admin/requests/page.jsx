@@ -18,7 +18,9 @@ const ManageRequestsPage = () => {
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState("");
     const [urgency, setUrgency] = useState("");
-    const { data, loading, error, reload } = useApi("/api/admin/requests");
+    const { data, loading, error, reload } = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/requests`,
+    );
 
     const q = search.trim().toLowerCase();
     const rows = asArray(data).filter(
@@ -33,7 +35,10 @@ const ManageRequestsPage = () => {
 
     const changeStatus = async (id, next) => {
         try {
-            await api(`/api/admin/requests/${id}/status`, { method: "PATCH", body: { status: next } });
+            await api(
+              `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/requests/${id}/status`,
+              { method: "PATCH", body: { status: next } },
+            );
             toast.success("Status updated");
             reload();
         } catch (e) {
@@ -44,7 +49,10 @@ const ManageRequestsPage = () => {
     const remove = async (r) => {
         if (!window.confirm(`Remove the request for ${r.patientName}? This cannot be undone.`)) return;
         try {
-            await api(`/api/admin/requests/${r._id}`, { method: "DELETE" });
+            await api(
+              `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/requests/${r._id}`,
+              { method: "DELETE" },
+            );
             toast.success("Request removed");
             reload();
         } catch (e) {

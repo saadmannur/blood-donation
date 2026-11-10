@@ -25,7 +25,9 @@ const columns = [
 ];
 
 const AdminDonationsPage = () => {
-    const { data, loading, error, reload } = useApi("/api/admin/donations");
+    const { data, loading, error, reload } = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/donations`,
+    );
     const rows = asArray(data);
 
     return (

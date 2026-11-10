@@ -107,7 +107,7 @@ const UrgentBloodRequests = () => {
               </div>
 
               <Link
-                href={`/requests/${request.id}`}
+                href={`/blood-requests`}
                 className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-600 py-3 text-sm font-semibold text-emerald-600 transition hover:bg-emerald-600 hover:text-white"
               >
                 View Request <ArrowUpRight size={17} />

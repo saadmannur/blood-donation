@@ -18,7 +18,9 @@ const BloodRequestsPage = () => {
     const [urgency, setUrgency] = useState("");
 
     // public list: contact info chara open request gulo
-    const { data, loading, error, reload } = useApi("/api/requests?public=1");
+    const { data, loading, error, reload } = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/requests?public=1`,
+    );
 
     const requests = asArray(data).filter(
         (r) => (!bloodGroup || r.bloodGroup === bloodGroup) && (!urgency || r.urgency === urgency)

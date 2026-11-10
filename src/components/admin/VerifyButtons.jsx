@@ -14,7 +14,10 @@ const VerifyButtons = ({ donor, onDone }) => {
     const act = async (status) => {
         setBusy(status);
         try {
-            await api(`/api/admin/donors/${donor._id}/verify`, { method: "PATCH", body: { status } });
+            await api(
+              `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/donors/${donor._id}/verify`,
+              { method: "PATCH", body: { status } },
+            );
             toast.success(status === "approved" ? "Donor approved" : "Donor rejected");
             onDone?.();
         } catch (e) {

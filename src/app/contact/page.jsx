@@ -24,7 +24,10 @@ const ContactPage = () => {
 
     const onSubmit = async (values) => {
         try {
-            await api("/api/contact", { method: "POST", body: values });
+            await api(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/contact`, {
+              method: "POST",
+              body: values,
+            });
             toast.success("Message sent. We will get back to you soon.");
             reset();
         } catch (e) {

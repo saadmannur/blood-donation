@@ -15,12 +15,20 @@ import { btnDanger, btnOutline, btnPrimary, card } from "@/components/ui/styles"
 
 const PatientRequestDetailsPage = () => {
     const { id } = useParams();
-    const { data: r, loading, error, reload } = useApi(`/api/requests/${id}`);
+    const {
+      data: r,
+      loading,
+      error,
+      reload,
+    } = useApi(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/requests/${id}`);
 
     const cancel = async () => {
         if (!window.confirm("Cancel this request? Donors will no longer be able to respond.")) return;
         try {
-            await api(`/api/requests/${id}/cancel`, { method: "PATCH" });
+            await api(
+              `${process.env.NEXT_PUBLIC_SERVER_URL}/api/requests/${id}/cancel`,
+              { method: "PATCH" },
+            );
             toast.success("Request cancelled");
             reload();
         } catch (e) {

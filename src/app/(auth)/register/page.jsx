@@ -76,7 +76,7 @@ const onSubmit = async (values) => {
     // Save donor profile
     if (role === "donor") {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/donors`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/donors`,
         {
           method: "POST",
           headers: {
@@ -91,11 +91,13 @@ const onSubmit = async (values) => {
             area: values.area,
             lastDonationDate: values.lastDonationDate || null,
             availability: values.availability,
+            verificationStatus: 'pending',
           }),
         },
       );
 
       const donorData = await response.json();
+      // console.log(donorData);
 
       if (!response.ok) {
         toast.warning("Account created, but donor profile could not be saved.");
@@ -107,7 +109,7 @@ const onSubmit = async (values) => {
 
     toast.success("Account created successfully");
      if (res) {
-      router.push("/login");
+      router.push("/");
      }
     
   } catch (error) {

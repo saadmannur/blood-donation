@@ -11,6 +11,7 @@ import EmptyState from "@/components/ui/EmptyState";
 import PageHeader from "@/components/ui/PageHeader";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { btnOutline } from "@/components/ui/styles";
+import { authClient } from "@/lib/auth-client";
 
 const columns = [
     {
@@ -36,7 +37,19 @@ const columns = [
 ];
 
 const DonorResponsesPage = () => {
-    const { data, loading, error, reload } = useApi("/api/responses/my");
+
+    const { data: u, isPending } = authClient.useSession();
+    const user = u?.user;
+    const donorEmail = user?.email;
+
+    const profile = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/donors/email/${donorEmail}`,
+    );
+    const donorId = profile?.data?._id;
+
+    const { data, loading, error, reload } = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/responses/my?donorId=${donorId}`,
+    );
     const rows = asArray(data);
 
     return (

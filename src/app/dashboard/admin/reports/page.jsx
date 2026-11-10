@@ -18,7 +18,12 @@ const Panel = ({ title, children }) => (
 );
 
 const ReportsPage = () => {
-    const { data: s, loading, error, reload } = useApi("/api/admin/reports");
+    const {
+      data: s,
+      loading,
+      error,
+      reload,
+    } = useApi(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/reports`);
 
     return (
         <>

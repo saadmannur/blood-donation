@@ -17,7 +17,9 @@ const ManageDonorsPage = () => {
     const [search, setSearch] = useState("");
     const [bloodGroup, setBloodGroup] = useState("");
     const [verification, setVerification] = useState("");
-    const { data, loading, error, reload } = useApi("/api/admin/donors");
+    const { data, loading, error, reload } = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/donors`,
+    );
 
     const q = search.trim().toLowerCase();
     const rows = asArray(data).filter(

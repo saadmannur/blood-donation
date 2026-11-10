@@ -14,17 +14,29 @@ import EmptyState from "@/components/ui/EmptyState";
 import PageHeader from "@/components/ui/PageHeader";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { btnDanger, btnOutline, btnPrimary } from "@/components/ui/styles";
+import { authClient } from "@/lib/auth-client";
 
 const MyRequestsPage = () => {
+
+    const { data: u, isPending } = authClient.useSession();
+          const user = u?.user;
+          const patientId = user?.id;
+
     const [tab, setTab] = useState("all");
-    const { data, loading, error, reload } = useApi("/api/requests/my");
+    const { data, loading, error, reload } = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/requests/my?patientId=${patientId}`,
+    );
+    // console.log(data);
     const all = asArray(data);
     const rows = tab === "all" ? all : all.filter((r) => r.status === tab);
 
     const cancel = async (id) => {
         if (!window.confirm("Cancel this request? Donors will no longer be able to respond.")) return;
         try {
-            await api(`/api/requests/${id}/cancel`, { method: "PATCH" });
+            await api(
+              `${process.env.NEXT_PUBLIC_SERVER_URL}/api/requests/${id}/cancel`,
+              { method: "PATCH" },
+            );
             toast.success("Request cancelled");
             reload();
         } catch (e) {

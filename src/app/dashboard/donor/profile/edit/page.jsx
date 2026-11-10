@@ -14,11 +14,21 @@ import AsyncView from "@/components/ui/AsyncView";
 import FormField from "@/components/ui/FormField";
 import PageHeader from "@/components/ui/PageHeader";
 import { btnOutline, btnPrimary, card, inputCls } from "@/components/ui/styles";
+import { authClient } from "@/lib/auth-client";
 
 // Profile na thakle (404) create mode, thakle edit mode
 const EditDonorProfilePage = () => {
+    const { data:u, isPending } = authClient.useSession();
+    const user = u?.user;
+    const donorEmail = user?.email;
+    // console.log(donorEmail);
+
     const router = useRouter();
-    const { data, loading, error, status, reload } = useApi("/api/donors/me");
+    const { data, loading, error, status, reload } = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/donors/email/${donorEmail}`,
+    );
+    // console.log(data);
+
     const isCreate = status === 404;
 
     const {
@@ -52,13 +62,23 @@ const EditDonorProfilePage = () => {
             };
 
             if (isCreate) {
-                await api("/api/donors", { method: "POST", body });
+                await api(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/donors`, {
+                  method: "POST",
+                  body,
+                });
                 toast.success("Donor profile created. It will be visible after admin verification.");
             } else {
-                await api("/api/donors/me", {
+                await api(
+                  `${process.env.NEXT_PUBLIC_SERVER_URL}/api/donors/${data._id}`,
+                  {
                     method: "PATCH",
-                    body: { ...body, name: v.name.trim(), phone: v.phone.trim() },
-                });
+                    body: {
+                      ...body,
+                      name: v.name.trim(),
+                      phone: v.phone.trim(),
+                    },
+                  },
+                );
                 toast.success("Profile updated");
             }
 
@@ -95,7 +115,7 @@ const EditDonorProfilePage = () => {
                                         className={inputCls}
                                         {...register("phone", {
                                             required: "Phone number is required",
-                                            pattern: { value: PHONE_PATTERN, message: "Enter a valid Bangladeshi phone number" },
+                                           
                                         })}
                                     />
                                 </FormField>

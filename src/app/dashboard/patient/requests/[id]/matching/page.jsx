@@ -17,8 +17,12 @@ import { btnOutline, btnSuccess, card } from "@/components/ui/styles";
 
 const MatchingDonorsPage = () => {
     const { id } = useParams();
-    const request = useApi(`/api/requests/${id}`);
-    const matching = useApi(`/api/matching/${id}`);
+    const request = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/requests/${id}`,
+    );
+    const matching = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/matching/${id}`,
+    );
     const [busyId, setBusyId] = useState("");
 
     const r = request.data;
@@ -30,7 +34,10 @@ const MatchingDonorsPage = () => {
         if (!window.confirm("Confirm that this donor has donated blood? The request will be marked as fulfilled.")) return;
         setBusyId(donorId);
         try {
-            await api("/api/donations", { method: "POST", body: { requestId: id, donorId } });
+            await api(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/donations`, {
+              method: "POST",
+              body: { requestId: id, donorId },
+            });
             toast.success("Donation confirmed. Thank you!");
             await Promise.all([request.reload(), matching.reload()]);
         } catch (e) {

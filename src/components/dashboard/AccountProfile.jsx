@@ -40,7 +40,7 @@ const AccountProfile = () => {
                                 <span className="font-semibold capitalize">{u.role}</span>
                             </Row>
                             <Row label="Account status">
-                                <StatusBadge value={u.accountStatus || "active"} />
+                                <StatusBadge value={u.status || "active"} />
                             </Row>
                             <Row label="Member since">{formatDate(u.createdAt)}</Row>
                         </dl>

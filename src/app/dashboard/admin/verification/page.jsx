@@ -10,7 +10,9 @@ import PageHeader from "@/components/ui/PageHeader";
 import VerifyButtons from "@/components/admin/VerifyButtons";
 
 const DonorVerificationPage = () => {
-    const { data, loading, error, reload } = useApi("/api/admin/donors?status=pending");
+    const { data, loading, error, reload } = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/donors/pending`,
+    );
     const donors = asArray(data);
 
     return (

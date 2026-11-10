@@ -4,12 +4,12 @@ import NavSession from "./NavSession";
 import NavColor from "./NavColor";
 
 const links = [
-    { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
-    { href: "/how-it-works", label: "How It Works" },
-    { href: "/find-donors", label: "Find Donors" },
-    { href: "/blood-requests", label: "Blood Requests" },
-    { href: "/contact", label: "Contact" },
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/how-it-works", label: "How It Works" },
+  { href: "/find-donors", label: "Find Donors" },
+  { href: "/blood-requests", label: "Blood Requests" },
+  { href: "/contact", label: "Contact" },
 ];
 
 const Navbar = () => {
@@ -28,7 +28,7 @@ const Navbar = () => {
 
                 {/* Center links, desktop */}
                 <ul className="hidden items-center gap-6 lg:flex">
-                    {links.map((l) => (
+                    {links.map((l) => ( 
                         <li key={l.href}>
                             <NavLinks href={l.href}>{l.label}</NavLinks>
                         </li>

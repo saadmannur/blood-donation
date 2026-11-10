@@ -1,10 +1,11 @@
 import dns from "node:dns";
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
+import { Suspense } from "react";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/nav/Navbar";
 import { Toaster } from "sonner";
+import Navbar from "@/components/navbar/Navbar";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -30,8 +31,13 @@ export default function RootLayout({ children }) {
       data-theme="light"
       className={`${outfit.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col ">
-        <Navbar></Navbar>
+      <body className="min-h-full flex flex-col">
+        <Suspense
+          fallback={<div className="h-16 w-full animate-pulse bg-white" />}
+        >
+          <Navbar />
+        </Suspense>
+
         <main>
           {children}
           <Toaster position="top-right" richColors expand={false} />

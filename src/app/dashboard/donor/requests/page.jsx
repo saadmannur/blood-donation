@@ -39,7 +39,9 @@ const columns = [
 
 const DonorRequestsPage = () => {
     const [urgency, setUrgency] = useState("");
-    const { data, loading, error, reload } = useApi("/api/requests?matching=1");
+    const { data, loading, error, reload } = useApi(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/requests?matching=1`,
+    );
 
     const rows = asArray(data).filter((r) => !urgency || r.urgency === urgency);
 

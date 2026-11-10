@@ -13,7 +13,7 @@ export async function requireRole(role) {
     const user = await getSessionUser();
 
     if (!user) redirect("/login");
-    if (user.accountStatus === "suspended") redirect("/login");
+    if (user.status === "suspended") redirect("/login");
     if (user.role !== role) redirect(dashboardPath(user.role));
 
     return user;

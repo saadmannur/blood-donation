@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -17,41 +18,57 @@ import hero5 from "@/assets/img-5.jpg";
 
 const slides = [hero1, hero2, hero3, hero4, hero5];
 
-// className: parent box-er size onujayi fill korar jonno (default h-full)
 const BannerCarousel = ({ className = "h-full" }) => {
-    return (
-        <div className={`relative w-full ${className}`}>
-            <Swiper
-                modules={[Autoplay, Navigation, Pagination]}
-                slidesPerView={1}
-                loop={true}
-                autoplay={{
-                    delay: 3000,
-                    disableOnInteraction: false,
-                }}
-                navigation
-                pagination={{ clickable: true }}
-                // Arrow gulo choto screen-e hide, md theke dekhabe.
-                // Swiper-er color/size CSS variable diye red theme-e anlam.
-                className="h-full w-full [--swiper-navigation-size:18px] [--swiper-pagination-color:#dc2626] [--swiper-navigation-color:#ffffff] [&_.swiper-button-next]:hidden [&_.swiper-button-prev]:hidden md:[&_.swiper-button-next]:flex md:[&_.swiper-button-prev]:flex"
-            >
-                {slides.map((slide, index) => (
-                    <SwiperSlide key={index}>
-                        <div className="relative h-full w-full">
-                            <Image
-                                src={slide}
-                                alt={`Blood donation slide ${index + 1}`}
-                                fill
-                                priority={index === 0}
-                                sizes="(min-width: 640px) 400px, 320px"
-                                className="object-cover"
-                            />
-                        </div>
-                    </SwiperSlide>
-                ))}
-            </Swiper>
-        </div>
-    );
+  const [mounted, setMounted] = useState(false);
+
+  // Initialize Swiper only in the browser.
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return (
+    <div className={`relative w-full ${className}`}>
+      {!mounted ? (
+        // Static fallback during server prerendering and initial hydration.
+        <Image
+          src={hero1}
+          alt="Blood donation"
+          fill
+          priority
+          sizes="(min-width: 640px) 400px, 320px"
+          className="object-cover"
+        />
+      ) : (
+        <Swiper
+          modules={[Autoplay, Navigation, Pagination]}
+          slidesPerView={1}
+          loop={true}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+          }}
+          navigation
+          pagination={{ clickable: true }}
+          className="h-full w-full [--swiper-navigation-size:18px] [--swiper-pagination-color:#dc2626] [--swiper-navigation-color:#ffffff] [&_.swiper-button-next]:hidden [&_.swiper-button-prev]:hidden md:[&_.swiper-button-next]:flex md:[&_.swiper-button-prev]:flex"
+        >
+          {slides.map((slide, index) => (
+            <SwiperSlide key={index}>
+              <div className="relative h-full w-full">
+                <Image
+                  src={slide}
+                  alt={`Blood donation slide ${index + 1}`}
+                  fill
+                  priority={index === 0}
+                  sizes="(min-width: 640px) 400px, 320px"
+                  className="object-cover"
+                />
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      )}
+    </div>
+  );
 };
 
 export default BannerCarousel;

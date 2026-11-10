@@ -20,7 +20,12 @@ import StatCard from "@/components/ui/StatCard";
 import { card } from "@/components/ui/styles";
 
 const AdminOverviewPage = () => {
-    const { data: s, loading, error, reload } = useApi("/api/admin/dashboard");
+    const {
+      data: s,
+      loading,
+      error,
+      reload,
+    } = useApi(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/dashboard`);
     const activities = asArray(s?.recentActivities);
 
     return (
